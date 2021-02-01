@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alarm vue.js</title>
+    <style>
+    .title{
+    	text-align: center;
+    }
+    .alarm{
+    	margin-left: 50px ;
+    	text-align: left;
+    }
+    #symbol{
+        margin-left:50px;
+        font-weight:normal;
+    }
+   
+    </style>
+</head>
+<body>
+<div id = "main">
+	<h1 class = "title">Mes Réveils</h1>
+	<div class ="alarm">
+		<ul>
+			<li v-for="(item,i) in label" :key="item">{{ item }}
+			<button id="symbol">✎</button><button @click="label.splice(i, 1)">&#128465;</button></li>
+		</ul>
+		<button @click="toggleNewAlarm">Ajouter une alarme</button>
+		<div v-if="show_newAlarm">
+			<input type="text" v-model="newLabel" />
+			<button @click="addAlarm">add</button>
+			<button @click="toggleNewAlarm">cancel</button>
+		</div>
+	</div>
+	</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
+<script>
+// Creating a new Vue instance and pass in an options object.
+
+new Vue({
+
+    // A DOM element to mount our view model.
+
+    el: '#main',
+
+    // Define properties and give them initial values.
+
+    data: {
+    	show_newAlarm: false,
+        label: ['First Alarm'],
+        newLabel: "New alarm"  
+    },
+    // Functions we will be using.
+
+    methods: {
+        addAlarm: function(){
+            // When a model is changed, the view will be automatically updated.
+            this.label.push(this.newLabel);
+            this.show_newAlarm = !this.show_newAlarm;
+            this.newLabel ="Label";
+        },
+        hide_newAlarm: function(){
+        	this.show_newAlarm = false;
+        },
+        toggleNewAlarm: function(){
+        	this.show_newAlarm = !this.show_newAlarm;
+        	this.newLabel = "Label";
+        }
+        getDate: function(){
+        	
+        }
+        }
+    })
+</script>
+</body>
+</html>
