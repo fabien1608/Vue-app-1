@@ -7,11 +7,11 @@
     <title>Alarm vue.js</title>
     <style>
     .title{
-    	text-align: center;
+        text-align: center;
     }
     .alarm{
-    	margin-left: 50px ;
-    	text-align: left;
+        margin-left: 50px ;
+        text-align: left;
     }
     #symbol{
         margin-left:50px;
@@ -22,27 +22,35 @@
 </head>
 <body>
 <div id = "main">
-	<h1 class = "title">Mes Réveils</h1>
-	<div class ="alarm">
-		<ul>
-			<li v-for="(item,i) in label" :key="item">{{ item }}
-			<button id="symbol">✎</button><button @click="label.splice(i, 1)">&#128465;</button></li>
-		</ul>
-		<button @click="toggleNewAlarm">Ajouter une alarme</button>
-		<div v-if="show_newAlarm">
-			<input type="text" v-model="newLabel" />
-			<button @click="addAlarm">add</button>
-			<button @click="toggleNewAlarm">cancel</button>
-		</div>
-	</div>
-	</div>
+    <h1 class = "title">Mes Réveils</h1>
+    <div class ="alarm">
+        <ul>
+            <li v-for="alarm in alarms">{{ alarm.label }}<span> {{alarm.date | format}}</span>
+            <button id="symbol">✎</button><button @click="delateAlarm">&#128465;</button></li>
+        </ul>
+        <button @click="toggleNewAlarm">Ajouter une alarme</button>
+        <div v-if="show_newAlarm">
+            <input type="text" v-model="newLabel" placeholder="Saisir le nom de votre alarme" />
+            <input type="text" v-model="newHours" placeholder="Saisir l'heure" />
+            <input type="text" v-model="newMinutes" placeholder="Saisir la minute"/>
+            <button @click="addAlarm">add</button>
+            <button @click="toggleNewAlarm">cancel</button>
+        </div>
+    </div>
+    </div>
 </div>
+<audio id="audio1" src="alarm_sound.mp3" preload="auto"></audio>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 <script>
-// Creating a new Vue instance and pass in an options object.
 
-new Vue({
+
+Vue.filter('format', function(date) {
+    dateToFormat = new Date(date);
+    return dateToFormat.getHours()+"h"+ dateToFormat.getMinutes();
+    
+});
+var demo = new Vue({
 
     // A DOM element to mount our view model.
 
@@ -51,30 +59,53 @@ new Vue({
     // Define properties and give them initial values.
 
     data: {
-    	show_newAlarm: false,
-        label: ['First Alarm'],
-        newLabel: "New alarm"  
+        show_newAlarm: false,
+        newLabel: "",
+        newHours:"",
+        newMinutes:"",
+        alarms: [
+        {
+            label: 'test Alarm',
+            date:'03 13, 08 04:20'
+        }]  
     },
     // Functions we will be using.
 
     methods: {
         addAlarm: function(){
-            // When a model is changed, the view will be automatically updated.
-            this.label.push(this.newLabel);
+            let dateActual = new Date();
+            let dateToPush = (dateActual.getMonth() +" "+ dateActual.getDay()+", "+ dateActual.getFullYear()+" "+this.newHours+":"+this.newMinutes);
+            this.alarms.push({label: this.newLabel, date: dateToPush.toString()});
             this.show_newAlarm = !this.show_newAlarm;
-            this.newLabel ="Label";
+            this.newLabel ="";
+            this.newHours = " ";
+            this.newMinutes = " ";
+            let time1 = dateActual.getTime();
+            let dateAlarm = new Date(dateToPush);
+            let time2 = dateAlarm.getTime();
+            let interval = time1-time2;
+            setTimeout(this.playAlarm(), 5000)
+
         },
         hide_newAlarm: function(){
-        	this.show_newAlarm = false;
+            this.show_newAlarm = false;
         },
         toggleNewAlarm: function(){
-        	this.show_newAlarm = !this.show_newAlarm;
-        	this.newLabel = "Label";
+            this.show_newAlarm = !this.show_newAlarm;
+        },
+        delateAlarm: function(){
+            let indexWanted =  this.alarms.indexOf(this.alarms.label);
+            console.log(indexWanted);
+            this.alarms.splice(indexWanted,1);
+        },
+        playAlarm: function(){
+            document.getElementById('audio1').play();
         }
-        getDate: function(){
-        	
-        }
-        }
+        
+       
+    }
+        
+
     })
 </script>
 </body>
