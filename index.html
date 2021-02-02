@@ -31,8 +31,8 @@
         <button @click="toggleNewAlarm">Ajouter une alarme</button>
         <div v-if="show_newAlarm">
             <input type="text" v-model="newLabel" placeholder="Saisir le nom de votre alarme" />
-            <input type="text" v-model="newHours" placeholder="Saisir l'heure" />
-            <input type="text" v-model="newMinutes" placeholder="Saisir la minute"/>
+            <input type="number" v-model="newHours" placeholder="Saisir l'heure" />
+            <input type="number" v-model="newMinutes" placeholder="Saisir la minute"/>
             <button @click="addAlarm">add</button>
             <button @click="toggleNewAlarm">cancel</button>
         </div>
@@ -73,6 +73,7 @@ var demo = new Vue({
 
     methods: {
         addAlarm: function(){
+            let alarmChrono;
             let dateActual = new Date();
             let dateToPush = (dateActual.getMonth() +" "+ dateActual.getDay()+", "+ dateActual.getFullYear()+" "+this.newHours+":"+this.newMinutes);
             this.alarms.push({label: this.newLabel, date: dateToPush.toString()});
@@ -84,7 +85,7 @@ var demo = new Vue({
             let dateAlarm = new Date(dateToPush);
             let time2 = dateAlarm.getTime();
             let interval = time1-time2;
-            setTimeout(this.playAlarm(), 500000)
+            alarmChrono = setTimeout(function(){this.playAlarm()}, 5000);
 
         },
         hide_newAlarm: function(){
