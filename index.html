@@ -73,7 +73,6 @@ var demo = new Vue({
 
     methods: {
         addAlarm: function(){
-            let alarmChrono;
             let dateActual = new Date();
             let dateToPush = (dateActual.getMonth() +" "+ dateActual.getDay()+", "+ dateActual.getFullYear()+" "+this.newHours+":"+this.newMinutes);
             this.alarms.push({label: this.newLabel, date: dateToPush.toString()});
@@ -84,8 +83,8 @@ var demo = new Vue({
             let time1 = dateActual.getTime();
             let dateAlarm = new Date(dateToPush);
             let time2 = dateAlarm.getTime();
-            let interval = time1-time2;
-            alarmChrono = setTimeout(function(){this.playAlarm()}, 5000);
+            let interval = time1 - time2;
+            let alarmChrono = setTimeout(function(){ this.playAlarm() }, 5000);
 
         },
         hide_newAlarm: function(){
@@ -93,6 +92,9 @@ var demo = new Vue({
         },
         toggleNewAlarm: function(){
             this.show_newAlarm = !this.show_newAlarm;
+            this.newLabel ="";
+            this.newHours = " ";
+            this.newMinutes = " ";
         },
         delateAlarm: function(){
             let indexWanted =  this.alarms.indexOf(this.alarms.label);
