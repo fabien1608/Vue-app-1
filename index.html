@@ -47,7 +47,16 @@
 
 Vue.filter('format', function(date) {
     dateToFormat = new Date(date);
-    return dateToFormat.getHours()+"h"+ dateToFormat.getMinutes();
+    dateToFormat = new Date(date);
+    let formatMinutes;
+     if (dateToFormat.getMinutes()<10){
+        formatMinutes = "0" + dateToFormat.getMinutes();
+    }
+    else{
+        formatMinutes = dateToFormat.getMinutes();
+    }
+    return dateToFormat.getHours()+"h"+ formatMinutes;
+
     
 });
 var demo = new Vue({
@@ -84,7 +93,9 @@ var demo = new Vue({
             let dateAlarm = new Date(dateToPush);
             let time2 = dateAlarm.getTime();
             let interval = time1 - time2;
-            let alarmChrono = setTimeout(function(){ this.playAlarm() }, 5000);
+            console.log(typeof interval);
+            console.log(interval);
+            let alarmChrono = setTimeout(()=>{this.playAlarm()} ,10000);
 
         },
         hide_newAlarm: function(){
