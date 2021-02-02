@@ -26,7 +26,13 @@
     <div class ="alarm">
         <ul>
             <li v-for="alarm in alarms">{{ alarm.label }}<span> {{alarm.date | format}}</span>
-            <button id="symbol">✎</button><button @click="delateAlarm">&#128465;</button></li>
+            <button @click="toggleAlarm" id="symbol">✎</button><button @click="delateAlarm">&#128465;</button></li>
+            <div v-if="show_Alarm">
+                <input type="text" v-model="newLabel" placeholder="Saisir le nom de votre alarme" />
+                <input type="number" v-model="newHours" placeholder="Saisir l'heure" />
+                <input type="number" v-model="newMinutes" placeholder="Saisir la minute"/>
+                <button @click="modifAlarm">Save</button>
+            </div>
         </ul>
         <button @click="toggleNewAlarm">Ajouter une alarme</button>
         <div v-if="show_newAlarm">
@@ -68,6 +74,7 @@ var demo = new Vue({
     // Define properties and give them initial values.
 
     data: {
+        show_Alarm: false,
         show_newAlarm: false,
         newLabel: "",
         newHours:"",
@@ -101,19 +108,31 @@ var demo = new Vue({
         hide_newAlarm: function(){
             this.show_newAlarm = false;
         },
+        
         toggleNewAlarm: function(){
             this.show_newAlarm = !this.show_newAlarm;
             this.newLabel ="";
             this.newHours = " ";
             this.newMinutes = " ";
         },
+
+        toggleAlarm: function(){
+            this.show_Alarm =!this.show_Alarm;
+        }, 
+
         delateAlarm: function(){
             let indexWanted =  this.alarms.indexOf(this.alarms.label);
-            console.log(indexWanted);
             this.alarms.splice(indexWanted,1);
         },
+
         playAlarm: function(){
             document.getElementById('audio1').play();
+        },
+
+        modifAlarm: function(){
+            let dateActual = new Date();
+            let dateToPush = (dateActual.getMonth() +" "+ dateActual.getDay()+", "+ dateActual.getFullYear()+" "+this.newHours+":"+this.newMinutes);
+            this.alarms = [{ label: this.newLabel, date: dateToPush }];
         }
         
        
